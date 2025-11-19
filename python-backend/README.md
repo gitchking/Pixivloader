@@ -1,123 +1,225 @@
-# 🐍 Python Backend for Pixivloader
+# Pixivloader Python Backend
 
-Clean, simple, and working Pixiv scraper using cookie authentication.
+Flask-based backend service for downloading and processing Pixiv artwork.
 
-## ✨ Features
+## Features
 
-- ✅ **Cookie-based auth** - No tokens, no OAuth hassle
-- ✅ **Fast & Reliable** - Direct API access
-- ✅ **Original Quality** - Full resolution images
-- ✅ **Real-time Updates** - Supabase integration
-- ✅ **Easy to Deploy** - Works on Render
+- Pixiv artwork scraping and downloading
+- Automatic metadata extraction
+- Supabase integration for storage
+- Image processing and optimization
+- RESTful API endpoints
 
-## 🚀 Quick Start
+## Tech Stack
 
-### 1. Get PHPSESSID Cookie (One Time)
+- Flask (Web framework)
+- Requests (HTTP client)
+- Supabase Python Client
+- Pillow (Image processing)
 
-1. Go to https://www.pixiv.net/ and login
-2. Press `F12` → **Application** → **Cookies**
-3. Copy `PHPSESSID` cookie value
-4. Add to `.env`:
-   ```env
-   PIXIV_PHPSESSID=your_cookie_value_here
-   ```
+## Setup
+
+### 1. Create Virtual Environment
+
+```bash
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+```
 
 ### 2. Install Dependencies
 
 ```bash
-pip install flask flask-cors python-dotenv supabase requests beautifulsoup4
+pip install -r requirements.txt
 ```
 
-### 3. Start Backend
+### 3. Configure Environment
+
+Copy `.env.example` to `.env` and fill in your credentials:
+
+```env
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_service_role_key
+PIXIV_REFRESH_TOKEN=your_pixiv_refresh_token
+FLASK_ENV=development
+PORT=5000
+```
+
+### 4. Run the Server
 
 ```bash
 python app.py
 ```
 
-Server runs on: http://localhost:3000
+The API will be available at `http://localhost:5000`
 
-## 📁 Project Structure
+## API Endpoints
+
+### Health Check
+```
+GET /health
+```
+Returns server status.
+
+### Scrape User Artwork
+```
+POST /api/scrape
+Content-Type: application/json
+
+{
+  "user_id": "123456"
+}
+```
+Downloads all artwork from the specified Pixiv user.
+
+## Project Structure
 
 ```
 python-backend/
-├── app.py                    # Main Flask server
-├── requirements.txt          # Dependencies
-├── .env                     # Configuration (your cookie here!)
 ├── services/
-│   ├── cookie_scraper.py    # Cookie-based scraper (WORKING!)
-│   ├── pixiv_scraper.py     # Main scraper interface
-│   └── supabase_client.py   # Database client
-├── download_pixiv.py        # Standalone download script
-├── test_scraper.py          # Test script
-└── README.md               # This file
+│   ├── pixiv_scraper.py      # Pixiv API integration
+│   ├── image_downloader.py   # Image download logic
+│   ├── supabase_client.py    # Supabase operations
+│   └── cookie_scraper.py     # Cookie handling
+├── downloads/                 # Downloaded images (gitignored)
+├── app.py                    # Flask application
+├── download_pixiv.py         # CLI tool for downloading
+├── requirements.txt          # Python dependencies
+├── Procfile                  # Deployment config
+└── runtime.txt              # Python version
 ```
 
-## 🧪 Testing
+## Services
 
-### Test the scraper:
+### PixivScraper
+Handles authentication and API requests to Pixiv.
+
+```python
+from services.pixiv_scraper import PixivScraper
+
+scraper = PixivScraper(refresh_token)
+artworks = scraper.get_user_artworks(user_id)
+```
+
+### ImageDownloader
+Downloads and processes images.
+
+```python
+from services.image_downloader import ImageDownloader
+
+downloader = ImageDownloader()
+downloader.download_image(url, filepath)
+```
+
+### SupabaseClient
+Manages database and storage operations.
+
+```python
+from services.supabase_client import SupabaseClient
+
+client = SupabaseClient()
+client.upload_artwork(artwork_data)
+```
+
+## CLI Usage
+
+Download artwork from a specific user:
+
 ```bash
-python test_scraper.py
+python download_pixiv.py <user_id>
 ```
 
-### Download images directly:
+Example:
 ```bash
-python download_pixiv.py https://www.pixiv.net/en/users/11
+python download_pixiv.py 13107138
 ```
 
-## 🌐 API Endpoints
+## Getting Pixiv Refresh Token
 
-- `GET /api/health` - Health check
-- `POST /api/scrape/start` - Start scraping
-- `GET /api/scrape/status/:id` - Get status
+1. Login to Pixiv in your browser
+2. Open DevTools (F12) → Application → Cookies
+3. Find `refresh_token` cookie
+4. Copy the value to your `.env` file
 
-## ⚙️ Environment Variables
+## Deployment
 
-Required in `.env`:
-```env
-PORT=3000
-FLASK_ENV=development
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
-FRONTEND_URL=http://localhost:5173
-PIXIV_PHPSESSID=your_cookie_here  # REQUIRED!
-```
+### Render
 
-## 🚀 Deployment on Render
+1. Create a new Web Service
+2. Connect your repository
+3. Set build command: `pip install -r requirements.txt`
+4. Set start command: `gunicorn app:app`
+5. Add environment variables
 
-1. Push to GitHub
-2. Create Web Service on Render
-3. Settings:
-   - Root Directory: `python-backend`
-   - Build: `pip install -r requirements.txt`
-   - Start: `gunicorn app:app`
-4. Add environment variables
-5. Deploy!
+### Railway
 
-## 🆘 Troubleshooting
+1. Create new project
+2. Connect repository
+3. Add environment variables
+4. Deploy automatically
 
-**Cookie expired:**
-- Get new PHPSESSID from browser
-- Update `.env`
+## Environment Variables
 
-**Module not found:**
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Your Supabase project URL | Yes |
+| `SUPABASE_KEY` | Supabase service role key | Yes |
+| `PIXIV_REFRESH_TOKEN` | Pixiv authentication token | Yes |
+| `FLASK_ENV` | Environment (development/production) | No |
+| `PORT` | Server port (default: 5000) | No |
+
+## Error Handling
+
+The API returns standard HTTP status codes:
+
+- `200` - Success
+- `400` - Bad request (missing parameters)
+- `401` - Unauthorized (invalid Pixiv token)
+- `404` - User not found
+- `500` - Server error
+
+## Development
+
+### Running Tests
+
 ```bash
-pip install -r requirements.txt
+# Add test files when available
+pytest
 ```
 
-**Port already in use:**
-- Change PORT in `.env`
+### Code Style
 
-## 💡 Why Cookie Method?
+Follow PEP 8 guidelines:
 
-- ✅ No token setup hassle
-- ✅ Works immediately
-- ✅ More reliable than Selenium
-- ✅ Lasts weeks before expiring
-- ✅ Simple to refresh
+```bash
+# Format code
+black .
 
-## 📝 Notes
+# Check linting
+flake8 .
+```
 
-- Cookie lasts ~2-4 weeks
-- When expired, just get a new one
-- Much simpler than OAuth/tokens
-- Production-ready and stable
+## Troubleshooting
+
+### Pixiv Authentication Failed
+- Verify your refresh token is valid
+- Check if token has expired (tokens expire after ~6 months)
+- Try logging out and back into Pixiv to get a new token
+
+### Supabase Connection Error
+- Verify SUPABASE_URL and SUPABASE_KEY are correct
+- Check if your Supabase project is active
+- Ensure service role key has proper permissions
+
+### Download Failures
+- Check internet connection
+- Verify Pixiv user ID exists
+- Check if artwork is public (private artwork cannot be downloaded)
+
+## License
+
+MIT License - see main project README for details.
