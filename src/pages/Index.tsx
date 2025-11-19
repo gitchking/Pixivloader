@@ -13,11 +13,6 @@ const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [pixivUrl, setPixivUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState<{
-    current: number;
-    total: number;
-    downloading: boolean;
-  }>({ current: 0, total: 0, downloading: false });
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,6 +45,10 @@ const Index = () => {
     setLoading(true);
 
     try {
+      // Extract user ID from URL for better naming
+      const userIdMatch = pixivUrl.match(/users\/(\d+)/);
+      const userId = userIdMatch ? userIdMatch[1] : 'unknown';
+
       // Save to Supabase download_history table
       const { data: historyData, error } = await supabase
         .from("download_history")
@@ -68,7 +67,12 @@ const Index = () => {
         throw error;
       }
 
-      // Call backend API to get image URLs
+      toast({
+        title: "Processing",
+        description: "Downloading and packaging images...",
+      });
+
+      // Call backend API to download and create zip
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/download/start`, {
         method: 'POST',
@@ -81,117 +85,42 @@ const Index = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch images');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to download images');
       }
 
-      const result = await response.json();
+      // Get the zip file
+      const blob = await response.blob();
+      const filename = `pixiv_user_${userId}.zip`;
 
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to fetch images');
-      }
+      // Download the zip file
+      downloadWithLink(blob, filename);
+      
+      toast({
+        title: "Download Complete",
+        description: `Check your Downloads folder for ${filename}`,
+      });
 
       // Update history with success
       await supabase
         .from("download_history")
         .update({
           status: "completed",
-          items_count: result.images
+          items_count: 1 // 1 zip file
         })
         .eq("id", historyData.id);
-
-      // Start download progress
-      setDownloadProgress({
-        current: 0,
-        total: result.images,
-        downloading: true
-      });
-
-      toast({
-        title: "Starting Downloads",
-        description: `Downloading ${result.images} images... Check your Downloads folder.`,
-      });
-
-      let downloaded = 0;
-      let failed = 0;
-
-      // Download each image through backend proxy
-      for (let i = 0; i < result.imageUrls.length; i++) {
-        try {
-          const imageUrl = result.imageUrls[i];
-          const filename = imageUrl.split('/').pop() || `image_${i}.jpg`;
-          
-          // Request image through backend proxy
-          const proxyResponse = await fetch(`${API_URL}/api/download/image`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imageUrl })
-          });
-
-          if (proxyResponse.ok) {
-            const blob = await proxyResponse.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-            
-            downloaded++;
-          } else {
-            failed++;
-          }
-
-          // Update progress
-          setDownloadProgress({
-            current: i + 1,
-            total: result.images,
-            downloading: true
-          });
-
-          // Small delay between downloads to avoid overwhelming browser
-          if (i < result.imageUrls.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 300));
-          }
-        } catch (err) {
-          console.error('Failed to download image:', err);
-          failed++;
-        }
-      }
-
-      // Reset progress
-      setDownloadProgress({
-        current: 0,
-        total: 0,
-        downloading: false
-      });
-
-      toast({
-        title: "Download Complete",
-        description: `Downloaded ${downloaded} of ${result.images} images. ${failed > 0 ? `${failed} failed.` : ''}`,
-      });
 
       // Clear the input
       setPixivUrl("");
 
     } catch (error: any) {
-      // Reset progress on error
-      setDownloadProgress({
-        current: 0,
-        total: 0,
-        downloading: false
-      });
-
       toast({
         title: "Error",
-        description: error.message || "Failed to start download",
+        description: error.message || "Failed to download",
         variant: "destructive",
       });
       
-      // Update history with failure if it exists
+      // Update history with failure
       try {
         await supabase
           .from("download_history")
@@ -203,6 +132,18 @@ const Index = () => {
       setLoading(false);
     }
   };
+
+  // Helper function for default download
+  function downloadWithLink(blob: Blob, filename: string) {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
 
   if (!user) {
     return null;
@@ -248,33 +189,10 @@ const Index = () => {
                   />
                 </div>
               </div>
-              <Button type="submit" className="w-full h-12 text-base" disabled={loading || downloadProgress.downloading}>
-                {loading ? "Processing..." : downloadProgress.downloading ? "Downloading..." : "Start Archive"}
+              <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
+                {loading ? "Processing..." : "Start Archive"}
               </Button>
             </form>
-
-            {/* Download Progress Bar */}
-            {downloadProgress.downloading && (
-              <div className="mt-4 space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Downloading images...</span>
-                  <span className="font-medium">
-                    {downloadProgress.current} / {downloadProgress.total}
-                  </span>
-                </div>
-                <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
-                  <div
-                    className="bg-primary h-full transition-all duration-300 ease-out rounded-full"
-                    style={{
-                      width: `${(downloadProgress.current / downloadProgress.total) * 100}%`
-                    }}
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground text-center">
-                  {Math.round((downloadProgress.current / downloadProgress.total) * 100)}% complete
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
 

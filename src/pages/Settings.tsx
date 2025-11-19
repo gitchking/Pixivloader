@@ -5,50 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Download, User, Folder } from "lucide-react";
+import { Download, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { User as UserType } from "@supabase/supabase-js";
 
 const Settings = () => {
   const [user, setUser] = useState<UserType | null>(null);
   const [quality, setQuality] = useState("original");
-  const [downloadLocation, setDownloadLocation] = useState("Browser Default");
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const handleSelectFolder = async () => {
-    try {
-      // Check if File System Access API is supported
-      if ('showDirectoryPicker' in window) {
-        // @ts-ignore - File System Access API
-        const dirHandle = await window.showDirectoryPicker();
-        const folderName = dirHandle.name;
-        setDownloadLocation(folderName);
-        
-        // Save to localStorage
-        localStorage.setItem('downloadLocation', folderName);
-        
-        toast({
-          title: "Folder Selected",
-          description: `Downloads will be saved to: ${folderName}`,
-        });
-      } else {
-        toast({
-          title: "Not Supported",
-          description: "Your browser doesn't support folder selection. Downloads will use the default location.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      // User cancelled or error occurred
-      console.log("Folder selection cancelled");
-    }
-  };
 
   const handleSaveSettings = () => {
     // Save settings to localStorage
     localStorage.setItem('downloadQuality', quality);
-    localStorage.setItem('downloadLocation', downloadLocation);
     
     toast({
       title: "Settings Saved",
@@ -59,13 +28,9 @@ const Settings = () => {
   useEffect(() => {
     // Load saved settings from localStorage
     const savedQuality = localStorage.getItem('downloadQuality');
-    const savedLocation = localStorage.getItem('downloadLocation');
     
     if (savedQuality) {
       setQuality(savedQuality);
-    }
-    if (savedLocation) {
-      setDownloadLocation(savedLocation);
     }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -133,28 +98,8 @@ const Settings = () => {
                     <SelectItem value="low">Low Quality (Faster)</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-base">
-                  Download Location
-                </Label>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-12 px-4 rounded-md border border-input bg-background flex items-center text-base text-muted-foreground">
-                    <Folder className="w-5 h-5 mr-2" />
-                    <span className="truncate">{downloadLocation}</span>
-                  </div>
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    className="h-12 px-6 text-base"
-                    onClick={handleSelectFolder}
-                  >
-                    Browse
-                  </Button>
-                </div>
                 <p className="text-sm text-muted-foreground">
-                  Click Browse to select a custom download folder. If not supported, downloads will use your browser's default location.
+                  Select the quality of images to download. Original quality provides the best results but larger file sizes.
                 </p>
               </div>
 
@@ -193,13 +138,9 @@ const Settings = () => {
                 <span className="text-muted-foreground">User ID:</span>
                 <span className="text-sm break-all">{user.id}</span>
               </div>
-              <div className="flex justify-between py-3 border-b border-border">
+              <div className="flex justify-between py-3">
                 <span className="text-muted-foreground">Quality Setting:</span>
                 <span className="capitalize">{quality}</span>
-              </div>
-              <div className="flex justify-between py-3">
-                <span className="text-muted-foreground">Download Location:</span>
-                <span>{downloadLocation}</span>
               </div>
             </div>
           </CardContent>

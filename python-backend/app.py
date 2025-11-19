@@ -176,7 +176,7 @@ def get_status(history_id):
 
 @app.route('/api/download/start', methods=['POST'])
 def start_download():
-    """Start downloading images to server (can be sent to user)"""
+    """Download all images and create a zip file"""
     try:
         data = request.get_json()
         url = data.get('url')
@@ -205,64 +205,56 @@ def start_download():
         if not result['success']:
             return jsonify(result), 400
         
-        # Return image URLs for frontend to download
-        return jsonify({
-            'success': True,
-            'user_id': user_id,
-            'artworks': result['artworks'],
-            'images': result['images'],
-            'imageUrls': result['imageUrls']
-        })
+        # Create zip file in memory
+        memory_file = io.BytesIO()
+        
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            downloaded = 0
+            failed = 0
+            
+            for idx, image_url in enumerate(result['imageUrls']):
+                try:
+                    # Download image
+                    headers = {
+                        'Referer': 'https://www.pixiv.net/',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                    
+                    response = requests.get(image_url, headers=headers, timeout=30)
+                    
+                    if response.status_code == 200:
+                        # Get filename from URL
+                        filename = image_url.split('/')[-1]
+                        
+                        # Add to zip
+                        zf.writestr(filename, response.content)
+                        downloaded += 1
+                        logger.info(f"Downloaded {downloaded}/{len(result['imageUrls'])}: {filename}")
+                    else:
+                        failed += 1
+                        logger.warning(f"Failed to download: {image_url} (HTTP {response.status_code})")
+                        
+                except Exception as e:
+                    failed += 1
+                    logger.error(f"Error downloading image {idx}: {str(e)}")
+        
+        # Seek to beginning of file
+        memory_file.seek(0)
+        
+        logger.info(f"✅ Zip created: {downloaded} images, {failed} failed")
+        
+        # Return zip file
+        return send_file(
+            memory_file,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name=f'pixiv_user_{user_id}.zip'
+        )
         
     except Exception as e:
         logger.error(f"Error in start_download: {str(e)}")
         return jsonify({
             'error': 'Internal server error',
-            'message': str(e)
-        }), 500
-
-@app.route('/api/download/image', methods=['POST'])
-def download_image():
-    """Proxy a single image download with Pixiv authentication"""
-    try:
-        data = request.get_json()
-        image_url = data.get('imageUrl')
-        
-        if not image_url:
-            return jsonify({
-                'error': 'Missing imageUrl',
-                'message': 'imageUrl is required'
-            }), 400
-        
-        # Download image with Pixiv headers
-        headers = {
-            'Referer': 'https://www.pixiv.net/',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-        
-        response = requests.get(image_url, headers=headers, timeout=30)
-        
-        if response.status_code != 200:
-            return jsonify({
-                'error': 'Failed to download image',
-                'message': f'HTTP {response.status_code}'
-            }), response.status_code
-        
-        # Determine content type
-        content_type = response.headers.get('Content-Type', 'image/jpeg')
-        
-        # Return image directly
-        return send_file(
-            io.BytesIO(response.content),
-            mimetype=content_type,
-            as_attachment=True,
-            download_name=image_url.split('/')[-1]
-        )
-        
-    except Exception as e:
-        logger.error(f"Error downloading image: {str(e)}")
-        return jsonify({
-            'error': 'Failed to download image',
             'message': str(e)
         }), 500
 

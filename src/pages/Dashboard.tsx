@@ -2,7 +2,19 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { History, Download, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { History, Download, CheckCircle, XCircle, Clock, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
 
 interface HistoryItem {
@@ -18,7 +30,10 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showClearDialog, setShowClearDialog] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -89,6 +104,37 @@ const Dashboard = () => {
     return date.toLocaleString();
   };
 
+  const handleClearHistory = async () => {
+    if (!user) return;
+    
+    setClearing(true);
+    try {
+      const { error } = await supabase
+        .from("download_history")
+        .delete()
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      setHistory([]);
+      setShowClearDialog(false);
+      
+      toast({
+        title: "History Cleared",
+        description: "All download history has been deleted.",
+      });
+    } catch (error) {
+      console.error("Error clearing history:", error);
+      toast({
+        title: "Error",
+        description: "Failed to clear history. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setClearing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-5rem)] bg-background flex items-center justify-center">
@@ -125,16 +171,29 @@ const Dashboard = () => {
 
         <Card>
           <CardHeader className="pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <History className="w-6 h-6 text-purple-500" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <History className="w-6 h-6 text-purple-500" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">Archive History</CardTitle>
+                  <CardDescription className="text-base">
+                    Track all your download tasks and their status
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-2xl">Archive History</CardTitle>
-                <CardDescription className="text-base">
-                  Track all your download tasks and their status
-                </CardDescription>
-              </div>
+              {history.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="default"
+                  onClick={() => setShowClearDialog(true)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Clear History
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent>
@@ -177,6 +236,28 @@ const Dashboard = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Clear History Confirmation Dialog */}
+        <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Clear Download History?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete all your download history records. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={clearing}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleClearHistory}
+                disabled={clearing}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {clearing ? "Clearing..." : "Clear History"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
