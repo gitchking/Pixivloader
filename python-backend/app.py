@@ -54,6 +54,14 @@ pixiv_scraper = PixivScraper()
 image_downloader = ImageDownloader(session=pixiv_scraper.scraper.session)
 supabase_client = SupabaseClient() if SUPABASE_AVAILABLE else None
 
+@app.after_request
+def after_request(response):
+    """Add CORS headers to every response"""
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
