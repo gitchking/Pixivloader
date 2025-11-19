@@ -74,6 +74,12 @@ const Index = () => {
 
       // Call backend API to download and create zip
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      
+      toast({
+        title: "Downloading",
+        description: "This may take 1-3 minutes depending on the number of images...",
+      });
+
       const response = await fetch(`${API_URL}/api/download/start`, {
         method: 'POST',
         headers: {
@@ -85,20 +91,33 @@ const Index = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to download images');
+        const errorText = await response.text();
+        let errorMessage = 'Failed to download images';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = errorText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       // Get the zip file
       const blob = await response.blob();
+      
+      // Verify we got a zip file
+      if (blob.size === 0) {
+        throw new Error('Received empty file from server');
+      }
+      
       const filename = `pixiv_user_${userId}.zip`;
 
       // Download the zip file
       downloadWithLink(blob, filename);
       
       toast({
-        title: "Download Complete",
-        description: `Check your Downloads folder for ${filename}`,
+        title: "Download Complete! 🎉",
+        description: `${filename} saved to your Downloads folder`,
       });
 
       // Update history with success
