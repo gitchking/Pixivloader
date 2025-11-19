@@ -13,6 +13,8 @@ const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [pixivUrl, setPixivUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [downloadStatus, setDownloadStatus] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -75,11 +77,24 @@ const Index = () => {
       // Call backend API to download and create zip
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       
+      // Start progress simulation
+      setProgress(0);
+      setDownloadStatus("Fetching image list...");
+      
+      // Simulate progress (since we can't get real-time progress from backend yet)
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 90) return prev; // Stop at 90% until real download completes
+          return prev + Math.random() * 10;
+        });
+      }, 500);
+
       toast({
         title: "Downloading",
         description: "This may take 1-3 minutes depending on the number of images...",
       });
 
+      setDownloadStatus("Downloading images...");
       const response = await fetch(`${API_URL}/api/download/start`, {
         method: 'POST',
         headers: {
@@ -102,6 +117,11 @@ const Index = () => {
         throw new Error(errorMessage);
       }
 
+      // Stop progress simulation
+      clearInterval(progressInterval);
+      setProgress(95);
+      setDownloadStatus("Creating zip file...");
+
       // Get the zip file
       const blob = await response.blob();
       
@@ -109,6 +129,9 @@ const Index = () => {
       if (blob.size === 0) {
         throw new Error('Received empty file from server');
       }
+      
+      setProgress(100);
+      setDownloadStatus("Download complete!");
       
       const filename = `pixiv_user_${userId}.zip`;
 
@@ -129,10 +152,17 @@ const Index = () => {
         })
         .eq("id", historyData.id);
 
-      // Clear the input
+      // Clear the input and reset progress
       setPixivUrl("");
+      setTimeout(() => {
+        setProgress(0);
+        setDownloadStatus("");
+      }, 2000);
 
     } catch (error: any) {
+      setProgress(0);
+      setDownloadStatus("");
+      
       toast({
         title: "Error",
         description: error.message || "Failed to download",
@@ -211,6 +241,21 @@ const Index = () => {
               <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
                 {loading ? "Processing..." : "Start Archive"}
               </Button>
+              
+              {loading && progress > 0 && (
+                <div className="space-y-2 mt-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">{downloadStatus}</span>
+                    <span className="font-medium">{Math.round(progress)}%</span>
+                  </div>
+                  <div className="w-full bg-secondary rounded-full h-2.5">
+                    <div 
+                      className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>

@@ -252,6 +252,17 @@ def start_download():
             'message': str(e)
         }), 500
 
+@app.route('/api/download/progress/<task_id>', methods=['GET'])
+def download_progress(task_id):
+    """Get download progress (for future implementation)"""
+    # This will be used for real-time progress tracking
+    return jsonify({
+        'task_id': task_id,
+        'status': 'processing',
+        'progress': 0,
+        'total': 0
+    })
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'error': 'Not found'}), 404
