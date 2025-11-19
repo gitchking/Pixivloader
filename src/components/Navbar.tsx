@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Image, LogOut, Home, History, Sparkles, Settings, LogIn } from "lucide-react";
+import { ProfileDropdown } from "@/components/ProfileDropdown";
+import { Image, Home, History, Sparkles, Settings, LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -21,11 +22,6 @@ export const Navbar = () => {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
 
   return (
     <header className="w-full border-b bg-background">
@@ -56,13 +52,10 @@ export const Navbar = () => {
           </Link>
         </nav>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <ThemeToggle />
           {user ? (
-            <Button variant="outline" size="default" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+            <ProfileDropdown />
           ) : (
             <Button size="default" onClick={() => navigate("/auth")} className="bg-blue-500 hover:bg-blue-600 text-white">
               <LogIn className="w-4 h-4 mr-2" />
