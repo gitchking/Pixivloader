@@ -55,22 +55,39 @@ export const ProfileDropdown = () => {
   }, []);
 
   const loadProfile = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-    setProfile({
-      id: user.id,
-      email: user.email || "",
-      display_name: data?.display_name || null,
-      avatar_url: data?.avatar_url || null,
-    });
-    setDisplayName(data?.display_name || "");
+      if (error && error.code !== 'PGRST116') {
+        console.error("Error loading profile:", error);
+        // If profile doesn't exist, create it
+        if (error.code === '42P01') {
+          toast({
+            title: "Database Setup Required",
+            description: "Please run the supabase-migration.sql script in your Supabase SQL Editor.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
+      setProfile({
+        id: user.id,
+        email: user.email || "",
+        display_name: data?.display_name || null,
+        avatar_url: data?.avatar_url || null,
+      });
+      setDisplayName(data?.display_name || "");
+    } catch (error) {
+      console.error("Error loading profile:", error);
+    }
   };
 
   const handleSignOut = async () => {
@@ -83,7 +100,10 @@ export const ProfileDropdown = () => {
       // Delete user data
       const { error } = await supabase.rpc("delete_user");
       
-      if (error) throw error;
+      if (error) {
+        console.error("Delete account error:", error);
+        throw error;
+      }
 
       await supabase.auth.signOut();
       toast({
@@ -91,10 +111,11 @@ export const ProfileDropdown = () => {
         description: "Your account has been permanently deleted.",
       });
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Delete account error:", error);
       toast({
         title: "Error",
-        description: "Failed to delete account. Please try again.",
+        description: error.message || "Failed to delete account. Please try again.",
         variant: "destructive",
       });
     }
@@ -111,13 +132,25 @@ export const ProfileDropdown = () => {
       if (avatarFile) {
         const fileExt = avatarFile.name.split(".").pop();
         const fileName = `${profile.id}-${Math.random()}.${fileExt}`;
-        const filePath = `avatars/${fileName}`;
+        const filePath = `${profile.id}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from("avatars")
           .upload(filePath, avatarFile, { upsert: true });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          if (uploadError.message.includes("not found")) {
+            toast({
+              title: "Storage Setup Required",
+              description: "Please run the supabase-migration.sql script to create the avatars bucket.",
+              variant: "destructive",
+            });
+            setUploading(false);
+            return;
+          }
+          throw uploadError;
+        }
 
         const { data: { publicUrl } } = supabase.storage
           .from("avatars")
@@ -134,9 +167,14 @@ export const ProfileDropdown = () => {
           display_name: displayName || null,
           avatar_url: avatarUrl,
           updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'id'
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Profile update error:", error);
+        throw error;
+      }
 
       toast({
         title: "Profile updated",
@@ -144,11 +182,13 @@ export const ProfileDropdown = () => {
       });
 
       setShowProfileDialog(false);
+      setAvatarFile(null);
       loadProfile();
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Update profile error:", error);
       toast({
         title: "Error",
-        description: "Failed to update profile. Please try again.",
+        description: error.message || "Failed to update profile. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -181,7 +221,7 @@ export const ProfileDropdown = () => {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuContent className="w-48" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
