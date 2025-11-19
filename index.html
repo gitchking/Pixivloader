@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixivloader - Archive Your Favorite Artists</title>
+  
+  <!-- Prevent flash of light mode -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.classList.add(theme);
+    })();
+  </script>
+  <meta name="description"
+    content="Securely archive entire Pixiv artist portfolios with high-resolution artwork and complete metadata. Premium artist archiving for collectors." />
+  <meta name="author" content="Pixivloader" />
+
+  <meta property="og:title" content="Pixivloader - Premium Artist Archiving" />
+  <meta property="og:description"
+    content="Securely preserve entire artist portfolios with high-resolution artwork, complete metadata, and organized collections." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Lovable" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
