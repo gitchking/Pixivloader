@@ -40,28 +40,14 @@ except Exception as e:
 # Initialize Flask app
 app = Flask(__name__)
 
-# Configure CORS - Allow frontend URLs
-allowed_origins = []
+# Configure CORS - Allow all origins with proper headers
+CORS(app, 
+     resources={r"/api/*": {"origins": "*"}},
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     supports_credentials=False)
 
-# Production frontend URL
-if os.getenv('FRONTEND_URL'):
-    allowed_origins.append(os.getenv('FRONTEND_URL'))
-
-# Development URLs
-if os.getenv('FLASK_ENV') == 'development':
-    allowed_origins.extend([
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://localhost:3002',
-        'http://localhost:5173'
-    ])
-
-# If no origins specified, allow all (not recommended for production)
-if not allowed_origins:
-    CORS(app, origins='*', supports_credentials=True)
-else:
-    CORS(app, origins=allowed_origins, supports_credentials=True)
-    logger.info(f"🔒 CORS enabled for: {allowed_origins}")
+logger.info("🔒 CORS enabled for all origins")
 
 # Initialize services
 pixiv_scraper = PixivScraper()
