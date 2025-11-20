@@ -60,28 +60,30 @@ const Index = () => {
       bannerContainer.appendChild(script2);
     }
 
-    // Load 728x90 hero banner
-    const heroConfig = document.createElement('script');
-    heroConfig.type = 'text/javascript';
-    heroConfig.innerHTML = `
-      atOptions = {
-        'key' : '70129e41ceb4014399e54925f3e5ce74',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-      };
-    `;
-    
-    const heroInvoke = document.createElement('script');
-    heroInvoke.type = 'text/javascript';
-    heroInvoke.src = '//www.highperformanceformat.com/70129e41ceb4014399e54925f3e5ce74/invoke.js';
-    
-    const heroContainer = document.getElementById('hero-banner-728x90');
-    if (heroContainer) {
-      heroContainer.appendChild(heroConfig);
-      heroContainer.appendChild(heroInvoke);
-    }
+    // Load 728x90 hero banner with delay to ensure DOM is ready
+    setTimeout(() => {
+      const heroConfig = document.createElement('script');
+      heroConfig.type = 'text/javascript';
+      heroConfig.innerHTML = `
+        atOptions = {
+          'key' : '70129e41ceb4014399e54925f3e5ce74',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      `;
+      
+      const heroInvoke = document.createElement('script');
+      heroInvoke.type = 'text/javascript';
+      heroInvoke.src = '//www.highperformanceformat.com/70129e41ceb4014399e54925f3e5ce74/invoke.js';
+      
+      const heroContainer = document.getElementById('hero-banner-728x90');
+      if (heroContainer) {
+        heroContainer.appendChild(heroConfig);
+        heroContainer.appendChild(heroInvoke);
+      }
+    }, 100);
 
     // Load 300x250 sponsored ad
     const sponsorConfig = document.createElement('script');
