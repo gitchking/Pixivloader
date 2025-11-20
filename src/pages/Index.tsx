@@ -36,20 +36,36 @@ const Index = () => {
 
   // Load JuicyAds
   useEffect(() => {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.setAttribute('data-cfasync', 'false');
-    script.innerHTML = `(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105482});`;
+    // Load 300x250 ad
+    const script1 = document.createElement('script');
+    script1.type = 'text/javascript';
+    script1.async = true;
+    script1.setAttribute('data-cfasync', 'false');
+    script1.innerHTML = `(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105482});`;
     
     const adContainer = document.getElementById('juicy-ad-container');
     if (adContainer) {
-      adContainer.appendChild(script);
+      adContainer.appendChild(script1);
+    }
+
+    // Load 468x60 banner
+    const script2 = document.createElement('script');
+    script2.type = 'text/javascript';
+    script2.async = true;
+    script2.setAttribute('data-cfasync', 'false');
+    script2.innerHTML = `(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105483});`;
+    
+    const bannerContainer = document.getElementById('juicy-ad-banner');
+    if (bannerContainer) {
+      bannerContainer.appendChild(script2);
     }
 
     return () => {
-      if (adContainer && script.parentNode) {
-        adContainer.removeChild(script);
+      if (adContainer && script1.parentNode) {
+        adContainer.removeChild(script1);
+      }
+      if (bannerContainer && script2.parentNode) {
+        bannerContainer.removeChild(script2);
       }
     };
   }, []);
@@ -297,7 +313,7 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Preview Section */}
+        {/* Sponsored Content Section */}
         <Card>
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
@@ -305,23 +321,25 @@ const Index = () => {
                 <Eye className="w-6 h-6 text-purple-500" />
               </div>
               <div>
-                <CardTitle className="text-xl">Preview</CardTitle>
+                <CardTitle className="text-xl">Sponsored Content</CardTitle>
                 <CardDescription className="text-base">
-                  Your archived content will appear here
+                  Support us by checking out our partners
                 </CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="min-h-[300px] flex flex-col items-center justify-center gap-3 border-2 border-dashed border-border rounded-lg">
-              <ImageOff className="w-12 h-12 text-muted-foreground/50" />
-              <p className="text-muted-foreground text-base">No content to preview yet</p>
-            </div>
-            
             {/* JuicyAds 300x250 */}
-            <div className="mt-4 flex justify-center">
+            <div className="flex justify-center mb-4">
               <div id="juicy-ad-container">
                 <ins id="1105482" data-width="300" data-height="250"></ins>
+              </div>
+            </div>
+            
+            {/* JuicyAds 468x60 Banner */}
+            <div className="flex justify-center">
+              <div id="juicy-ad-banner">
+                <ins id="1105483" data-width="468" data-height="60"></ins>
               </div>
             </div>
           </CardContent>
