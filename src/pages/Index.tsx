@@ -111,7 +111,7 @@ const Index = () => {
         description: "Archiving Pixiv profile...",
       });
 
-      const response = await fetch(`${API_URL}/api/download/start`, {
+      const response = await fetch(`${API_URL}/download/start`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

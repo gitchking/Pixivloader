@@ -330,7 +330,7 @@ def start_download():
         }), 500
 
 @app.route('/api/download/progress/<task_id>', methods=['GET'])
-def download_progress(task_id):
+def get_download_progress(task_id):
     """Get download progress (for future implementation)"""
     # This will be used for real-time progress tracking
     return jsonify({
