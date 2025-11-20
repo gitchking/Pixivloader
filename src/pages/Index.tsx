@@ -60,12 +60,39 @@ const Index = () => {
       bannerContainer.appendChild(script2);
     }
 
+    // Load 728x90 hero banner
+    const heroConfig = document.createElement('script');
+    heroConfig.type = 'text/javascript';
+    heroConfig.innerHTML = `
+      atOptions = {
+        'key' : '70129e41ceb4014399e54925f3e5ce74',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    `;
+    
+    const heroInvoke = document.createElement('script');
+    heroInvoke.type = 'text/javascript';
+    heroInvoke.src = '//www.highperformanceformat.com/70129e41ceb4014399e54925f3e5ce74/invoke.js';
+    
+    const heroContainer = document.getElementById('hero-banner-728x90');
+    if (heroContainer) {
+      heroContainer.appendChild(heroConfig);
+      heroContainer.appendChild(heroInvoke);
+    }
+
     return () => {
       if (adContainer && script1.parentNode) {
         adContainer.removeChild(script1);
       }
       if (bannerContainer && script2.parentNode) {
         bannerContainer.removeChild(script2);
+      }
+      if (heroContainer) {
+        if (heroConfig.parentNode) heroContainer.removeChild(heroConfig);
+        if (heroInvoke.parentNode) heroContainer.removeChild(heroInvoke);
       }
     };
   }, []);
@@ -249,6 +276,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-6 py-4 max-w-6xl flex-1">
+        {/* Hero Banner - 728x90 */}
+        <div className="flex justify-center mb-4">
+          <div id="hero-banner-728x90"></div>
+        </div>
+
         <div className="mb-4">
           <h1 className="text-3xl font-bold">Archive Manager</h1>
           <p className="text-muted-foreground text-base">
