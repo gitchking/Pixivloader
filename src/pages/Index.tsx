@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Archive, Eye, Link, ImageOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -199,8 +200,8 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-6 py-4 max-w-6xl">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="container mx-auto px-6 py-4 max-w-6xl flex-1">
         <div className="mb-4">
           <h1 className="text-3xl font-bold">Archive Manager</h1>
           <p className="text-muted-foreground text-base">{user.email}</p>
@@ -283,6 +284,7 @@ const Index = () => {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   );
 };
