@@ -297,6 +297,18 @@ const Index = () => {
               <ImageOff className="w-12 h-12 text-muted-foreground/50" />
               <p className="text-muted-foreground text-base">No content to preview yet</p>
             </div>
+            
+            {/* JuicyAds 300x250 */}
+            <div className="mt-4 flex justify-center">
+              <div dangerouslySetInnerHTML={{
+                __html: `
+                  <ins id="1105482" data-width="300" data-height="250"></ins>
+                  <script type="text/javascript" data-cfasync="false" async>
+                    (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105482});
+                  </script>
+                `
+              }} />
+            </div>
           </CardContent>
         </Card>
       </div>
