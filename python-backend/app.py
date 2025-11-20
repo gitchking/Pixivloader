@@ -244,40 +244,29 @@ def start_download():
             'message': f'Downloading {total_images} images...'
         })
         
-        # Create zip file in memory
-        memory_file = io.BytesIO()
-        
-        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-            downloaded = 0
-            failed = 0
+        # Use optimized concurrent downloader
+        try:
+            # Determine optimal worker count based on image count
+            max_workers = min(8, max(2, total_images // 10))  # 2-8 workers
             
-            for idx, image_url in enumerate(result['imageUrls']):
-                try:
-                    # Download image
-                    headers = {
-                        'Referer': 'https://www.pixiv.net/',
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                    }
-                    
-                    response = requests.get(image_url, headers=headers, timeout=30)
-                    
-                    if response.status_code == 200:
-                        # Get filename from URL
-                        filename = image_url.split('/')[-1]
-                        
-                        # Add to zip
-                        zf.writestr(filename, response.content)
-                        downloaded += 1
-                        
-                        # Update progress
-                        progress_percent = int((downloaded / total_images) * 100)
-                        download_progress[task_id].update({
-                            'progress': progress_percent,
-                            'downloaded': downloaded,
-                            'message': f'Downloaded {downloaded}/{total_images} images'
-                        })
-                        
-                        logger.info(f"Downloaded {downloaded}/{total_images}: {filename}")
+            logger.info(f"Using {max_workers} concurrent workers for {total_images} images")
+            
+            # Update progress tracking for concurrent downloads
+            def update_progress_callback(completed_count, total_count):
+                progress_percent = int((completed_count / total_count) * 100)
+                download_progress[task_id].update({
+                    'progress': progress_percent,
+                    'downloaded': completed_count,
+                    'message': f'Processing {completed_count}/{total_count} images'
+                })
+            
+            # Use the optimized ImageDownloader
+            memory_file, downloaded, failed = image_downloader.create_zip(
+                result['imageUrls'], 
+                user_id=user_id,
+                max_workers=max_workers,
+                progress_callback=update_progress_callback
+            )
                     else:
                         failed += 1
                         logger.warning(f"Failed to download: {image_url} (HTTP {response.status_code})")
