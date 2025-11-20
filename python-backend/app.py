@@ -267,13 +267,6 @@ def start_download():
                 max_workers=max_workers,
                 progress_callback=update_progress_callback
             )
-                    else:
-                        failed += 1
-                        logger.warning(f"Failed to download: {image_url} (HTTP {response.status_code})")
-                        
-                except Exception as e:
-                    failed += 1
-                    logger.error(f"Error downloading image {idx}: {str(e)}")
         
         # Update to creating zip status
         download_progress[task_id].update({
