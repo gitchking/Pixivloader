@@ -388,6 +388,12 @@ const Index = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Native Banner - Adsterra */}
+            <div className="flex justify-center">
+              <script async data-cfasync="false" src="//pl28099866.effectivegatecpm.com/f4aaba2171d409ead37e6501b37f7541/invoke.js"></script>
+              <div id="container-f4aaba2171d409ead37e6501b37f7541"></div>
+            </div>
+
             {/* Highperformanceformat 300x250 */}
             <div className="flex justify-center">
               <div id="sponsor-ad-300x250"></div>
