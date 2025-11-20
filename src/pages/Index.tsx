@@ -174,14 +174,11 @@ const Index = () => {
       if (bannerContainer && script2.parentNode) {
         bannerContainer.removeChild(script2);
       }
-      if (heroContainer) {
-        if (heroConfig.parentNode) heroContainer.removeChild(heroConfig);
-        if (heroInvoke.parentNode) heroContainer.removeChild(heroInvoke);
-      }
       if (sponsorContainer) {
         if (sponsorConfig.parentNode) sponsorContainer.removeChild(sponsorConfig);
         if (sponsorInvoke.parentNode) sponsorContainer.removeChild(sponsorInvoke);
       }
+      // Hero banners are in setTimeout, cleanup handled separately
     };
   }, []);
 
