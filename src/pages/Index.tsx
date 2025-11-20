@@ -361,6 +361,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-6 py-4 max-w-6xl flex-1">
+        {/* Top Hero Banner - 468x60 (from head script) */}
+        <div className="flex justify-center mb-4">
+          <div id="container-5f6bdb1e7d7bd8bdabfb60ea769eeadd"></div>
+        </div>
+
         {/* Hero Banner - 468x60 */}
         <div className="flex justify-center mb-4">
           <div id="hero-banner-468x60"></div>
