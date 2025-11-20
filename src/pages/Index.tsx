@@ -83,6 +83,29 @@ const Index = () => {
       heroContainer.appendChild(heroInvoke);
     }
 
+    // Load 300x250 sponsored ad
+    const sponsorConfig = document.createElement('script');
+    sponsorConfig.type = 'text/javascript';
+    sponsorConfig.innerHTML = `
+      atOptions = {
+        'key' : 'e88d7bd16a35340865176e4cc0c74b83',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    `;
+    
+    const sponsorInvoke = document.createElement('script');
+    sponsorInvoke.type = 'text/javascript';
+    sponsorInvoke.src = '//www.highperformanceformat.com/e88d7bd16a35340865176e4cc0c74b83/invoke.js';
+    
+    const sponsorContainer = document.getElementById('sponsor-ad-300x250');
+    if (sponsorContainer) {
+      sponsorContainer.appendChild(sponsorConfig);
+      sponsorContainer.appendChild(sponsorInvoke);
+    }
+
     return () => {
       if (adContainer && script1.parentNode) {
         adContainer.removeChild(script1);
@@ -93,6 +116,10 @@ const Index = () => {
       if (heroContainer) {
         if (heroConfig.parentNode) heroContainer.removeChild(heroConfig);
         if (heroInvoke.parentNode) heroContainer.removeChild(heroInvoke);
+      }
+      if (sponsorContainer) {
+        if (sponsorConfig.parentNode) sponsorContainer.removeChild(sponsorConfig);
+        if (sponsorInvoke.parentNode) sponsorContainer.removeChild(sponsorInvoke);
       }
     };
   }, []);
@@ -360,9 +387,14 @@ const Index = () => {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {/* Highperformanceformat 300x250 */}
+            <div className="flex justify-center">
+              <div id="sponsor-ad-300x250"></div>
+            </div>
+
             {/* JuicyAds 300x250 */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center">
               <div id="juicy-ad-container">
                 <ins id="1105482" data-width="300" data-height="250"></ins>
               </div>
