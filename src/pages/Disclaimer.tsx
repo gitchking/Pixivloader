@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Shield, Copyright, XCircle, Users, FileWarning, Info, UserCheck, ShieldAlert, Globe, RefreshCw } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const Disclaimer = () => {
@@ -21,7 +21,12 @@ const Disclaimer = () => {
 
           <Card className="mb-6 border-yellow-500/20">
             <CardHeader>
-              <CardTitle>Important Notice</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                  <Info className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle>Important Notice</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -31,9 +36,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-blue-500/20">
             <CardHeader>
-              <CardTitle>Not Affiliated with Pixiv</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-blue-500" />
+                </div>
+                <CardTitle>Not Affiliated with Pixiv</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -44,9 +54,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-green-500/20">
             <CardHeader>
-              <CardTitle>Personal Use Only</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <UserCheck className="w-6 h-6 text-green-500" />
+                </div>
+                <CardTitle>Personal Use Only</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -61,9 +76,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-purple-500/20">
             <CardHeader>
-              <CardTitle>Copyright and Intellectual Property</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Copyright className="w-6 h-6 text-purple-500" />
+                </div>
+                <CardTitle>Copyright and Intellectual Property</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -75,9 +95,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-red-500/20">
             <CardHeader>
-              <CardTitle>No Warranty</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                  <XCircle className="w-6 h-6 text-red-500" />
+                </div>
+                <CardTitle>No Warranty</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -93,9 +118,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-amber-500/20">
             <CardHeader>
-              <CardTitle>User Responsibility</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-amber-500" />
+                </div>
+                <CardTitle>User Responsibility</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -111,9 +141,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-orange-500/20">
             <CardHeader>
-              <CardTitle>Limitation of Liability</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                  <ShieldAlert className="w-6 h-6 text-orange-500" />
+                </div>
+                <CardTitle>Limitation of Liability</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -130,9 +165,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-indigo-500/20">
             <CardHeader>
-              <CardTitle>Third-Party Content</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                  <Globe className="w-6 h-6 text-indigo-500" />
+                </div>
+                <CardTitle>Third-Party Content</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -147,9 +187,14 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-cyan-500/20">
             <CardHeader>
-              <CardTitle>Service Changes</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                  <RefreshCw className="w-6 h-6 text-cyan-500" />
+                </div>
+                <CardTitle>Service Changes</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -160,20 +205,7 @@ const Disclaimer = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Questions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                If you have questions about this disclaimer, please contact us at:
-                <br />
-                <a href="mailto:legal@pixivloader.com" className="text-primary hover:underline">
-                  legal@pixivloader.com
-                </a>
-              </p>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
       <Footer />

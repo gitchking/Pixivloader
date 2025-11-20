@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText } from "lucide-react";
+import { FileText, CheckCircle, Users, Copyright, Ban, Server, XCircle, AlertCircle, RefreshCw, Package, Wifi, UserX, ShieldAlert, Scale } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const Terms = () => {
@@ -19,9 +19,14 @@ const Terms = () => {
             </div>
           </div>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-green-500/20">
             <CardHeader>
-              <CardTitle>1. Acceptance of Terms</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-500" />
+                </div>
+                <CardTitle>1. Acceptance of Terms</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -31,9 +36,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-cyan-500/20">
             <CardHeader>
-              <CardTitle>2. Description of Service</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                  <Package className="w-6 h-6 text-cyan-500" />
+                </div>
+                <CardTitle>2. Description of Service</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-3">
@@ -48,9 +58,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-blue-500/20">
             <CardHeader>
-              <CardTitle>3. User Responsibilities</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-500" />
+                </div>
+                <CardTitle>3. User Responsibilities</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">You agree to:</p>
@@ -65,9 +80,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-purple-500/20">
             <CardHeader>
-              <CardTitle>4. Intellectual Property</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Copyright className="w-6 h-6 text-purple-500" />
+                </div>
+                <CardTitle>4. Intellectual Property</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -79,9 +99,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-red-500/20">
             <CardHeader>
-              <CardTitle>5. Prohibited Uses</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                  <Ban className="w-6 h-6 text-red-500" />
+                </div>
+                <CardTitle>5. Prohibited Uses</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">You may not:</p>
@@ -96,9 +121,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-green-500/20">
             <CardHeader>
-              <CardTitle>6. Service Availability</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <Wifi className="w-6 h-6 text-green-500" />
+                </div>
+                <CardTitle>6. Service Availability</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -109,9 +139,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-red-500/20">
             <CardHeader>
-              <CardTitle>7. Account Termination</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                  <UserX className="w-6 h-6 text-red-500" />
+                </div>
+                <CardTitle>7. Account Termination</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -122,9 +157,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-yellow-500/20">
             <CardHeader>
-              <CardTitle>8. Disclaimer of Warranties</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-yellow-500" />
+                </div>
+                <CardTitle>8. Disclaimer of Warranties</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -134,9 +174,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-orange-500/20">
             <CardHeader>
-              <CardTitle>9. Limitation of Liability</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                  <ShieldAlert className="w-6 h-6 text-orange-500" />
+                </div>
+                <CardTitle>9. Limitation of Liability</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -146,9 +191,14 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-indigo-500/20">
             <CardHeader>
-              <CardTitle>10. Changes to Terms</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                  <RefreshCw className="w-6 h-6 text-indigo-500" />
+                </div>
+                <CardTitle>10. Changes to Terms</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -159,20 +209,7 @@ const Terms = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>11. Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                For questions about these Terms of Service, contact us at:
-                <br />
-                <a href="mailto:legal@pixivloader.com" className="text-primary hover:underline">
-                  legal@pixivloader.com
-                </a>
-              </p>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
       <Footer />

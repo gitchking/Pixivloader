@@ -2,7 +2,7 @@
 Pixivloader Python Backend
 Fast and reliable Pixiv scraper using official API
 """
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, Response, stream_with_context
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -11,6 +11,10 @@ import requests
 import io
 import zipfile
 from urllib.parse import urlparse
+import json
+import uuid
+from threading import Thread
+import time
 
 # Load environment variables
 load_dotenv()
@@ -53,6 +57,9 @@ logger.info("🔒 CORS enabled for all origins")
 pixiv_scraper = PixivScraper()
 image_downloader = ImageDownloader(session=pixiv_scraper.scraper.session)
 supabase_client = SupabaseClient() if SUPABASE_AVAILABLE else None
+
+# Store for progress tracking
+download_progress = {}
 
 @app.after_request
 def after_request(response):
@@ -168,9 +175,25 @@ def get_status(history_id):
             'message': str(e)
         }), 500
 
+@app.route('/api/download/progress/<task_id>', methods=['GET'])
+def download_progress_stream(task_id):
+    """Stream download progress updates via Server-Sent Events"""
+    def generate():
+        while True:
+            if task_id in download_progress:
+                progress_data = download_progress[task_id]
+                yield f"data: {json.dumps(progress_data)}\n\n"
+                
+                # If download is complete or failed, stop streaming
+                if progress_data.get('status') in ['completed', 'failed']:
+                    break
+            time.sleep(0.5)  # Update every 500ms
+    
+    return Response(stream_with_context(generate()), mimetype='text/event-stream')
+
 @app.route('/api/download/start', methods=['POST'])
 def start_download():
-    """Download all images and create a zip file"""
+    """Download all images and create a zip file with progress tracking"""
     try:
         data = request.get_json()
         url = data.get('url')
@@ -191,13 +214,35 @@ def start_download():
             }), 400
         
         user_id = match.group(1)
-        logger.info(f"Starting download for user {user_id}")
+        task_id = str(uuid.uuid4())
+        
+        logger.info(f"Starting download for user {user_id}, task_id: {task_id}")
+        
+        # Initialize progress
+        download_progress[task_id] = {
+            'status': 'fetching',
+            'progress': 0,
+            'total': 0,
+            'downloaded': 0,
+            'message': 'Fetching image list...'
+        }
         
         # Get image URLs
         result = pixiv_scraper.scrape_user(user_id, max_illusts=50)
         
         if not result['success']:
+            download_progress[task_id] = {
+                'status': 'failed',
+                'message': result.get('error', 'Failed to fetch images')
+            }
             return jsonify(result), 400
+        
+        total_images = len(result['imageUrls'])
+        download_progress[task_id].update({
+            'status': 'downloading',
+            'total': total_images,
+            'message': f'Downloading {total_images} images...'
+        })
         
         # Create zip file in memory
         memory_file = io.BytesIO()
@@ -223,7 +268,16 @@ def start_download():
                         # Add to zip
                         zf.writestr(filename, response.content)
                         downloaded += 1
-                        logger.info(f"Downloaded {downloaded}/{len(result['imageUrls'])}: {filename}")
+                        
+                        # Update progress
+                        progress_percent = int((downloaded / total_images) * 100)
+                        download_progress[task_id].update({
+                            'progress': progress_percent,
+                            'downloaded': downloaded,
+                            'message': f'Downloaded {downloaded}/{total_images} images'
+                        })
+                        
+                        logger.info(f"Downloaded {downloaded}/{total_images}: {filename}")
                     else:
                         failed += 1
                         logger.warning(f"Failed to download: {image_url} (HTTP {response.status_code})")
@@ -232,21 +286,44 @@ def start_download():
                     failed += 1
                     logger.error(f"Error downloading image {idx}: {str(e)}")
         
+        # Update to creating zip status
+        download_progress[task_id].update({
+            'status': 'creating_zip',
+            'progress': 95,
+            'message': 'Creating zip file...'
+        })
+        
         # Seek to beginning of file
         memory_file.seek(0)
         
+        # Mark as completed
+        download_progress[task_id].update({
+            'status': 'completed',
+            'progress': 100,
+            'downloaded': downloaded,
+            'failed': failed,
+            'message': f'Complete! {downloaded} images downloaded'
+        })
+        
         logger.info(f"✅ Zip created: {downloaded} images, {failed} failed")
         
-        # Return zip file
-        return send_file(
+        # Return zip file with task_id in headers
+        response = send_file(
             memory_file,
             mimetype='application/zip',
             as_attachment=True,
             download_name=f'pixiv_user_{user_id}.zip'
         )
+        response.headers['X-Task-ID'] = task_id
+        return response
         
     except Exception as e:
         logger.error(f"Error in start_download: {str(e)}")
+        if 'task_id' in locals():
+            download_progress[task_id] = {
+                'status': 'failed',
+                'message': str(e)
+            }
         return jsonify({
             'error': 'Internal server error',
             'message': str(e)

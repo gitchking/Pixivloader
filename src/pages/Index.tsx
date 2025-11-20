@@ -23,17 +23,12 @@ const Index = () => {
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (!session) {
-        navigate("/auth");
-      }
+      // Don't redirect - allow viewing the page
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (!session) {
-        navigate("/auth");
-      }
     });
 
     return () => subscription.unsubscribe();
@@ -43,7 +38,17 @@ const Index = () => {
 
   const handleDownload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    
+    // Require authentication for download
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to download archives",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
     
     setLoading(true);
 
@@ -78,24 +83,34 @@ const Index = () => {
       // Call backend API to download and create zip
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       
-      // Start progress simulation
+      // Enhanced progress simulation with realistic stages
       setProgress(0);
-      setDownloadStatus("Fetching image list...");
+      setDownloadStatus("Initializing...");
       
-      // Simulate progress (since we can't get real-time progress from backend yet)
+      const progressStages = [
+        { progress: 10, message: "Connecting to Pixiv...", delay: 500 },
+        { progress: 20, message: "Fetching artwork list...", delay: 1000 },
+        { progress: 35, message: "Downloading images...", delay: 2000 },
+        { progress: 60, message: "Processing images...", delay: 3000 },
+        { progress: 80, message: "Creating archive...", delay: 1000 },
+        { progress: 95, message: "Finalizing...", delay: 500 },
+      ];
+      
+      let currentStage = 0;
       const progressInterval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 90) return prev; // Stop at 90% until real download completes
-          return prev + Math.random() * 10;
-        });
-      }, 500);
+        if (currentStage < progressStages.length) {
+          const stage = progressStages[currentStage];
+          setProgress(stage.progress);
+          setDownloadStatus(stage.message);
+          currentStage++;
+        }
+      }, 800);
 
       toast({
-        title: "Downloading",
-        description: "This may take 1-3 minutes depending on the number of images...",
+        title: "Download Started",
+        description: "Archiving Pixiv profile...",
       });
 
-      setDownloadStatus("Downloading images...");
       const response = await fetch(`${API_URL}/api/download/start`, {
         method: 'POST',
         headers: {
@@ -118,10 +133,10 @@ const Index = () => {
         throw new Error(errorMessage);
       }
 
-      // Stop progress simulation
+      // Stop progress simulation and complete
       clearInterval(progressInterval);
-      setProgress(95);
-      setDownloadStatus("Creating zip file...");
+      setProgress(100);
+      setDownloadStatus("Download complete!");
 
       // Get the zip file
       const blob = await response.blob();
@@ -195,16 +210,14 @@ const Index = () => {
     window.URL.revokeObjectURL(url);
   }
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-6 py-4 max-w-6xl flex-1">
         <div className="mb-4">
           <h1 className="text-3xl font-bold">Archive Manager</h1>
-          <p className="text-muted-foreground text-base">{user.email}</p>
+          <p className="text-muted-foreground text-base">
+            {user ? user.email : "Login to start archiving"}
+          </p>
         </div>
 
         {/* Archive Section */}
@@ -244,17 +257,20 @@ const Index = () => {
               </Button>
               
               {loading && progress > 0 && (
-                <div className="space-y-2 mt-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{downloadStatus}</span>
-                    <span className="font-medium">{Math.round(progress)}%</span>
+                <div className="space-y-3 mt-4 p-4 bg-secondary/50 rounded-lg border border-border">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-foreground">{downloadStatus}</span>
+                    <span className="text-lg font-bold text-primary">{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-secondary rounded-full h-2.5">
+                  <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
                     <div 
-                      className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                      className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-500 ease-out shadow-md"
                       style={{ width: `${progress}%` }}
-                    />
+                    >
+                      <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                    </div>
                   </div>
+                  <p className="text-xs text-muted-foreground text-center">Please wait while we archive your content...</p>
                 </div>
               )}
             </form>

@@ -8,55 +8,55 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Pixiv-inspired color system */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 13%;
+    /* Softer, warmer light theme - easier on the eyes */
+    --background: 30 20% 97%;
+    --foreground: 0 0% 20%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 13%;
+    --card: 30 25% 98%;
+    --card-foreground: 0 0% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 13%;
+    --popover: 30 25% 98%;
+    --popover-foreground: 0 0% 20%;
 
-    /* Pixiv signature blue */
-    --primary: 203 100% 49%;
+    /* Pixiv signature blue - slightly desaturated */
+    --primary: 203 85% 49%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 203 100% 44%;
+    --primary-hover: 203 85% 44%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 13%;
+    --secondary: 30 15% 94%;
+    --secondary-foreground: 0 0% 20%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 30 15% 94%;
+    --muted-foreground: 0 0% 50%;
 
-    --accent: 203 100% 49%;
+    --accent: 203 85% 49%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 203 100% 49%;
+    --border: 30 10% 88%;
+    --input: 30 10% 88%;
+    --ring: 203 85% 49%;
 
     --radius: 0.5rem;
 
     /* Custom design tokens */
-    --pixiv-blue: 203 100% 49%;
-    --pixiv-blue-hover: 203 100% 44%;
-    --pixiv-gray: 0 0% 96%;
-    --pixiv-text: 0 0% 13%;
-    --pixiv-text-muted: 0 0% 45%;
+    --pixiv-blue: 203 85% 49%;
+    --pixiv-blue-hover: 203 85% 44%;
+    --pixiv-gray: 30 15% 94%;
+    --pixiv-text: 0 0% 20%;
+    --pixiv-text-muted: 0 0% 50%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(203 100% 49%), hsl(210 100% 56%));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%), hsl(203 100% 98%));
+    --gradient-primary: linear-gradient(135deg, hsl(203 85% 49%), hsl(210 85% 56%));
+    --gradient-hero: linear-gradient(180deg, hsl(30 20% 97%), hsl(203 30% 95%));
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1);
-    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.1);
+    /* Softer shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.03);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08);
+    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.08);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

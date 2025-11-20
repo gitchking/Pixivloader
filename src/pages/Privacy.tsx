@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Shield } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, Lock, Eye, Database, Users, FileCheck, Clock, Settings, Globe, UserCheck, Trash2, BookOpen } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const Privacy = () => {
@@ -19,9 +19,14 @@ const Privacy = () => {
             </div>
           </div>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-blue-500/20">
             <CardHeader>
-              <CardTitle>Introduction</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-blue-500" />
+                </div>
+                <CardTitle>Introduction</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="prose prose-sm dark:prose-invert max-w-none">
               <p>
@@ -31,38 +36,63 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-blue-500/20">
             <CardHeader>
-              <CardTitle>Information We Collect</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <Database className="w-6 h-6 text-blue-500" />
+                </div>
+                <CardTitle>Information We Collect</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">Account Information</h3>
-                <p className="text-sm text-muted-foreground">
-                  When you create an account, we collect your email address and authentication credentials
-                  through Supabase. We do not store your passwords directly.
-                </p>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-5 h-5 text-purple-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Account Information</h3>
+                  <p className="text-sm text-muted-foreground">
+                    When you create an account, we collect your email address and authentication credentials
+                    through Supabase. We do not store your passwords directly.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2">Usage Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  We collect information about your downloads, including URLs you archive and download history.
-                  This data is stored securely and used only to provide our service to you.
-                </p>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                  <Eye className="w-5 h-5 text-green-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Usage Data</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We collect information about your downloads, including URLs you archive and download history.
+                    This data is stored securely and used only to provide our service to you.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2">Technical Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  We may collect IP addresses, browser type, and device information for security and
-                  service improvement purposes.
-                </p>
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                  <FileCheck className="w-5 h-5 text-orange-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Technical Data</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We may collect IP addresses, browser type, and device information for security and
+                    service improvement purposes.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-cyan-500/20">
             <CardHeader>
-              <CardTitle>How We Use Your Information</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-cyan-500" />
+                </div>
+                <CardTitle>How We Use Your Information</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
@@ -75,9 +105,14 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-green-500/20">
             <CardHeader>
-              <CardTitle>Data Security</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-green-500" />
+                </div>
+                <CardTitle>Data Security</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -88,9 +123,14 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-indigo-500/20">
             <CardHeader>
-              <CardTitle>Third-Party Services</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                  <Globe className="w-6 h-6 text-indigo-500" />
+                </div>
+                <CardTitle>Third-Party Services</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">We use the following third-party services:</p>
@@ -102,9 +142,14 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-amber-500/20">
             <CardHeader>
-              <CardTitle>Your Rights</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                  <UserCheck className="w-6 h-6 text-amber-500" />
+                </div>
+                <CardTitle>Your Rights</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">You have the right to:</p>
@@ -118,9 +163,14 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card className="mb-6">
+          <Card className="mb-6 border-purple-500/20">
             <CardHeader>
-              <CardTitle>Data Retention</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-purple-500" />
+                </div>
+                <CardTitle>Data Retention</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -131,20 +181,7 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Us</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                If you have questions about this Privacy Policy, please contact us at:
-                <br />
-                <a href="mailto:privacy@pixivloader.com" className="text-primary hover:underline">
-                  privacy@pixivloader.com
-                </a>
-              </p>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
       <Footer />

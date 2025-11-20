@@ -165,20 +165,7 @@ const DMCA = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Questions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                For questions about our DMCA policy, contact:
-                <br />
-                <a href="mailto:dmca@pixivloader.com" className="text-primary hover:underline">
-                  dmca@pixivloader.com
-                </a>
-              </p>
-            </CardContent>
-          </Card>
+
         </div>
       </div>
       <Footer />
