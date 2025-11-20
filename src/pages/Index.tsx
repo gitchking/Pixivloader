@@ -119,7 +119,7 @@ const Index = () => {
       nativeContainer.parentNode.insertBefore(nativeScript, nativeContainer);
     }
 
-    // Load 468x60 banner
+    // Load 468x60 banner (Sponsored section)
     const banner468Config = document.createElement('script');
     banner468Config.type = 'text/javascript';
     banner468Config.innerHTML = `
@@ -141,6 +141,31 @@ const Index = () => {
       banner468Container.appendChild(banner468Config);
       banner468Container.appendChild(banner468Invoke);
     }
+
+    // Load 468x60 hero banner with delay
+    setTimeout(() => {
+      const heroBanner468Config = document.createElement('script');
+      heroBanner468Config.type = 'text/javascript';
+      heroBanner468Config.innerHTML = `
+        atOptions = {
+          'key' : '5f6bdb1e7d7bd8bdabfb60ea769eeadd',
+          'format' : 'iframe',
+          'height' : 60,
+          'width' : 468,
+          'params' : {}
+        };
+      `;
+      
+      const heroBanner468Invoke = document.createElement('script');
+      heroBanner468Invoke.type = 'text/javascript';
+      heroBanner468Invoke.src = '//www.highperformanceformat.com/5f6bdb1e7d7bd8bdabfb60ea769eeadd/invoke.js';
+      
+      const heroBanner468Container = document.getElementById('hero-banner-468x60');
+      if (heroBanner468Container) {
+        heroBanner468Container.appendChild(heroBanner468Config);
+        heroBanner468Container.appendChild(heroBanner468Invoke);
+      }
+    }, 50);
 
     return () => {
       if (adContainer && script1.parentNode) {
@@ -339,6 +364,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-6 py-4 max-w-6xl flex-1">
+        {/* Hero Banner - 468x60 */}
+        <div className="flex justify-center mb-4">
+          <div id="hero-banner-468x60"></div>
+        </div>
+
         {/* Hero Banner - 728x90 */}
         <div className="flex justify-center mb-4">
           <div id="hero-banner-728x90"></div>
