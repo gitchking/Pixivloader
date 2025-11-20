@@ -399,14 +399,17 @@ const Index = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Native Banner - Adsterra */}
-            <div className="flex justify-center">
-              <div id="container-f4aaba2171d409ead37e6501b37f7541"></div>
-            </div>
+            {/* Native Banner + 300x250 Side by Side */}
+            <div className="flex flex-wrap justify-center gap-4">
+              {/* Native Banner - Adsterra */}
+              <div className="flex-shrink-0">
+                <div id="container-f4aaba2171d409ead37e6501b37f7541"></div>
+              </div>
 
-            {/* Highperformanceformat 300x250 */}
-            <div className="flex justify-center">
-              <div id="sponsor-ad-300x250"></div>
+              {/* Highperformanceformat 300x250 */}
+              <div className="flex-shrink-0">
+                <div id="sponsor-ad-300x250"></div>
+              </div>
             </div>
 
             {/* JuicyAds 300x250 */}
