@@ -267,37 +267,48 @@ def start_download():
                 max_workers=max_workers,
                 progress_callback=update_progress_callback
             )
-        
-        # Update to creating zip status
-        download_progress[task_id].update({
-            'status': 'creating_zip',
-            'progress': 95,
-            'message': 'Creating zip file...'
-        })
-        
-        # Seek to beginning of file
-        memory_file.seek(0)
-        
-        # Mark as completed
-        download_progress[task_id].update({
-            'status': 'completed',
-            'progress': 100,
-            'downloaded': downloaded,
-            'failed': failed,
-            'message': f'Complete! {downloaded} images downloaded'
-        })
-        
-        logger.info(f"✅ Zip created: {downloaded} images, {failed} failed")
-        
-        # Return zip file with task_id in headers
-        response = send_file(
-            memory_file,
-            mimetype='application/zip',
-            as_attachment=True,
-            download_name=f'pixiv_user_{user_id}.zip'
-        )
-        response.headers['X-Task-ID'] = task_id
-        return response
+            
+            # Update to creating zip status
+            download_progress[task_id].update({
+                'status': 'creating_zip',
+                'progress': 95,
+                'message': 'Creating zip file...'
+            })
+            
+            # Seek to beginning of file
+            memory_file.seek(0)
+            
+            # Mark as completed
+            download_progress[task_id].update({
+                'status': 'completed',
+                'progress': 100,
+                'downloaded': downloaded,
+                'failed': failed,
+                'message': f'Complete! {downloaded} images downloaded'
+            })
+            
+            logger.info(f"✅ Zip created: {downloaded} images, {failed} failed")
+            
+            # Return zip file with task_id in headers
+            response = send_file(
+                memory_file,
+                mimetype='application/zip',
+                as_attachment=True,
+                download_name=f'pixiv_user_{user_id}.zip'
+            )
+            response.headers['X-Task-ID'] = task_id
+            return response
+            
+        except Exception as e:
+            logger.error(f"❌ Download failed: {str(e)}")
+            download_progress[task_id] = {
+                'status': 'failed',
+                'message': f'Download failed: {str(e)}'
+            }
+            return jsonify({
+                'error': 'Download failed',
+                'message': str(e)
+            }), 500
         
     except Exception as e:
         logger.error(f"Error in start_download: {str(e)}")
