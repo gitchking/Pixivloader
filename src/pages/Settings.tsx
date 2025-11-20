@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Download, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { User as UserType } from "@supabase/supabase-js";
+import Footer from "@/components/Footer";
 
 const Settings = () => {
   const [user, setUser] = useState<UserType | null>(null);
@@ -176,6 +177,7 @@ const Settings = () => {
           <div id="settings-banner-728x90"></div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

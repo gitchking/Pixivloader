@@ -16,6 +16,7 @@ import {
 import { History, Download, CheckCircle, XCircle, Clock, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@supabase/supabase-js";
+import Footer from "@/components/Footer";
 
 interface HistoryItem {
   id: string;
@@ -100,6 +101,29 @@ const Dashboard = () => {
       if (middleBannerContainer) {
         middleBannerContainer.appendChild(middleBannerConfig);
         middleBannerContainer.appendChild(middleBannerInvoke);
+      }
+
+      // Hero Banner - 468x60
+      const heroBannerConfig = document.createElement('script');
+      heroBannerConfig.type = 'text/javascript';
+      heroBannerConfig.innerHTML = `
+        atOptions = {
+          'key' : '5f6bdb1e7d7bd8bdabfb60ea769eeadd',
+          'format' : 'iframe',
+          'height' : 60,
+          'width' : 468,
+          'params' : {}
+        };
+      `;
+      
+      const heroBannerInvoke = document.createElement('script');
+      heroBannerInvoke.type = 'text/javascript';
+      heroBannerInvoke.src = '//www.highperformanceformat.com/5f6bdb1e7d7bd8bdabfb60ea769eeadd/invoke.js';
+      
+      const heroBannerContainer = document.getElementById('history-hero-banner-468x60');
+      if (heroBannerContainer) {
+        heroBannerContainer.appendChild(heroBannerConfig);
+        heroBannerContainer.appendChild(heroBannerInvoke);
       }
 
       // Bottom Banner - 468x60
@@ -241,6 +265,11 @@ const Dashboard = () => {
           <div id="history-top-banner-728x90"></div>
         </div>
 
+        {/* Hero Section Banner - 468x60 */}
+        <div className="flex justify-center mb-4">
+          <div id="history-hero-banner-468x60"></div>
+        </div>
+
         <div className="mb-4">
           <h1 className="text-3xl font-bold">Download History</h1>
           <p className="text-muted-foreground text-base">{user.email}</p>
@@ -346,6 +375,7 @@ const Dashboard = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
+      <Footer />
     </div>
   );
 };
