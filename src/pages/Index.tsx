@@ -117,6 +117,29 @@ const Index = () => {
       nativeContainer.parentNode.insertBefore(nativeScript, nativeContainer);
     }
 
+    // Load 468x60 banner
+    const banner468Config = document.createElement('script');
+    banner468Config.type = 'text/javascript';
+    banner468Config.innerHTML = `
+      atOptions = {
+        'key' : '5f6bdb1e7d7bd8bdabfb60ea769eeadd',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    `;
+    
+    const banner468Invoke = document.createElement('script');
+    banner468Invoke.type = 'text/javascript';
+    banner468Invoke.src = '//www.highperformanceformat.com/5f6bdb1e7d7bd8bdabfb60ea769eeadd/invoke.js';
+    
+    const banner468Container = document.getElementById('banner-ad-468x60');
+    if (banner468Container) {
+      banner468Container.appendChild(banner468Config);
+      banner468Container.appendChild(banner468Invoke);
+    }
+
     return () => {
       if (adContainer && script1.parentNode) {
         adContainer.removeChild(script1);
@@ -399,17 +422,14 @@ const Index = () => {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Native Banner + 300x250 Side by Side */}
-            <div className="flex flex-wrap justify-center gap-4">
-              {/* Native Banner - Adsterra */}
-              <div className="flex-shrink-0">
-                <div id="container-f4aaba2171d409ead37e6501b37f7541"></div>
-              </div>
+            {/* Native Banner - Adsterra */}
+            <div className="flex justify-center">
+              <div id="container-f4aaba2171d409ead37e6501b37f7541"></div>
+            </div>
 
-              {/* Highperformanceformat 300x250 */}
-              <div className="flex-shrink-0">
-                <div id="sponsor-ad-300x250"></div>
-              </div>
+            {/* Highperformanceformat 300x250 */}
+            <div className="flex justify-center">
+              <div id="sponsor-ad-300x250"></div>
             </div>
 
             {/* JuicyAds 300x250 */}
@@ -419,6 +439,11 @@ const Index = () => {
               </div>
             </div>
             
+            {/* Highperformanceformat 468x60 Banner */}
+            <div className="flex justify-center">
+              <div id="banner-ad-468x60"></div>
+            </div>
+
             {/* JuicyAds 468x60 Banner */}
             <div className="flex justify-center">
               <div id="juicy-ad-banner">
