@@ -34,6 +34,26 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Load JuicyAds
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    script.innerHTML = `(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105482});`;
+    
+    const adContainer = document.getElementById('juicy-ad-container');
+    if (adContainer) {
+      adContainer.appendChild(script);
+    }
+
+    return () => {
+      if (adContainer && script.parentNode) {
+        adContainer.removeChild(script);
+      }
+    };
+  }, []);
+
 
 
   const handleDownload = async (e: React.FormEvent) => {
@@ -300,14 +320,9 @@ const Index = () => {
             
             {/* JuicyAds 300x250 */}
             <div className="mt-4 flex justify-center">
-              <div dangerouslySetInnerHTML={{
-                __html: `
-                  <ins id="1105482" data-width="300" data-height="250"></ins>
-                  <script type="text/javascript" data-cfasync="false" async>
-                    (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1105482});
-                  </script>
-                `
-              }} />
+              <div id="juicy-ad-container">
+                <ins id="1105482" data-width="300" data-height="250"></ins>
+              </div>
             </div>
           </CardContent>
         </Card>
