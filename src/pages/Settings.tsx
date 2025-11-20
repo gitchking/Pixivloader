@@ -49,6 +49,31 @@ const Settings = () => {
       }
     });
 
+    // Load 728x90 banner ad
+    setTimeout(() => {
+      const bannerConfig = document.createElement('script');
+      bannerConfig.type = 'text/javascript';
+      bannerConfig.innerHTML = `
+        atOptions = {
+          'key' : '70129e41ceb4014399e54925f3e5ce74',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      `;
+      
+      const bannerInvoke = document.createElement('script');
+      bannerInvoke.type = 'text/javascript';
+      bannerInvoke.src = '//www.highperformanceformat.com/70129e41ceb4014399e54925f3e5ce74/invoke.js';
+      
+      const bannerContainer = document.getElementById('settings-banner-728x90');
+      if (bannerContainer) {
+        bannerContainer.appendChild(bannerConfig);
+        bannerContainer.appendChild(bannerInvoke);
+      }
+    }, 100);
+
     return () => subscription.unsubscribe();
   }, [navigate]);
 
@@ -145,6 +170,11 @@ const Settings = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Banner Ad - 728x90 */}
+        <div className="flex justify-center mt-6 mb-4">
+          <div id="settings-banner-728x90"></div>
+        </div>
       </div>
     </div>
   );
