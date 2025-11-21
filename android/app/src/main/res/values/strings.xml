@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pixivloader</string>
+    <string name="title_activity_main">Pixivloader</string>
+    <string name="package_name">com.pixivloader.app</string>
+    <string name="custom_url_scheme">com.pixivloader.app</string>
+</resources>

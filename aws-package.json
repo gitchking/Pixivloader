@@ -1,0 +1,34 @@
+{
+  "name": "pixiv-backend-aws",
+  "version": "1.0.0",
+  "description": "Pixiv backend for AWS Lambda deployment",
+  "main": "aws-lambda-handler.js",
+  "scripts": {
+    "start": "serverless offline",
+    "deploy": "serverless deploy",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
+    "logs": "serverless logs -f api --tail",
+    "info": "serverless info",
+    "remove": "serverless remove"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "axios": "^1.13.2",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.0"
+  },
+  "keywords": [
+    "pixiv",
+    "aws",
+    "lambda",
+    "serverless",
+    "mobile"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

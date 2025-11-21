@@ -1,0 +1,44 @@
+service: pixiv-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'prod'}
+  environment:
+    PIXIV_PHPSESSID: ${env:PIXIV_PHPSESSID}
+    PIXIV_BACKUP_SESSIONS: ${env:PIXIV_BACKUP_SESSIONS}
+  httpApi:
+    cors: true
+  timeout: 30
+  memorySize: 512
+
+functions:
+  api:
+    handler: aws-lambda-handler.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+    host: 0.0.0.0
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .env
+    - README.md
+    - mobile-backend/**
+    - src/**
+    - public/**
+    - *.md

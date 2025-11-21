@@ -8,9 +8,16 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mobile:setup": "npm install && cd mobile-backend && npm install && cd ..",
+    "mobile:dev": "echo 'Starting mobile dev...' && start cmd /k \"cd mobile-backend && npm start\" && npm run dev",
+    "mobile:build": "npm run build && npx cap copy && npx cap open android",
+    "mobile:backend": "cd mobile-backend && npm start"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",

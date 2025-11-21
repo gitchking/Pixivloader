@@ -8,26 +8,26 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Softer, warmer light theme - easier on the eyes */
-    --background: 30 20% 97%;
-    --foreground: 0 0% 20%;
+    /* Soft, comfortable light theme - easy on the eyes */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
 
-    --card: 30 25% 98%;
-    --card-foreground: 0 0% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 30 25% 98%;
-    --popover-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Pixiv signature blue - slightly desaturated */
+    /* Pixiv signature blue */
     --primary: 203 85% 49%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 203 85% 44%;
 
-    --secondary: 30 15% 94%;
-    --secondary-foreground: 0 0% 20%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 30 15% 94%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
     --accent: 203 85% 49%;
     --accent-foreground: 0 0% 100%;
@@ -35,52 +35,32 @@ All colors MUST be HSL.
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 10% 88%;
-    --input: 30 10% 88%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
     --ring: 203 85% 49%;
 
     --radius: 0.5rem;
-
-    /* Custom design tokens */
-    --pixiv-blue: 203 85% 49%;
-    --pixiv-blue-hover: 203 85% 44%;
-    --pixiv-gray: 30 15% 94%;
-    --pixiv-text: 0 0% 20%;
-    --pixiv-text-muted: 0 0% 50%;
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(203 85% 49%), hsl(210 85% 56%));
-    --gradient-hero: linear-gradient(180deg, hsl(30 20% 97%), hsl(203 30% 95%));
-    
-    /* Softer shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.03);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08);
-    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.08);
-    
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 0 0% 3%;
-    --foreground: 0 0% 95%;
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 95%;
+    --card: 222 47% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 3%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 222 47% 4%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 203 100% 49%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 203 100% 54%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 203 100% 49%;
     --accent-foreground: 0 0% 100%;
@@ -88,24 +68,9 @@ All colors MUST be HSL.
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
     --ring: 203 100% 49%;
-    
-    /* Dark mode custom tokens */
-    --pixiv-blue: 203 100% 49%;
-    --pixiv-blue-hover: 203 100% 54%;
-    --pixiv-gray: 0 0% 10%;
-    --pixiv-text: 0 0% 95%;
-    --pixiv-text-muted: 0 0% 65%;
-    
-    --gradient-primary: linear-gradient(135deg, hsl(203 100% 49%), hsl(210 100% 56%));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 3%), hsl(0 0% 1%));
-    
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.7);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.8);
-    --shadow-hover: 0 20px 25px -5px hsl(0 0% 0% / 0.9);
   }
 }
 
